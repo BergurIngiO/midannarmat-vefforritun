@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Miðannarverkefni</title>
+</head>
+<body>
+
+<h1 class="fyrirsogn">Söluaðilðar eldsneytis á Íslandi</h1>
+
+<div class="myndir">
+    <img src="static/atlantsolia.png">
+    <img src="static/n1.png">
+    <img src="static/dælan.png">
+    <img src="static/costco.png">
+    <img src="static/olis.png">
+    <img src="static/ob.png">
+    <img src="static/orkan.png">
+    <img src="static/orkan-x.png">
+</div>
+
+    <%
+        companies=[]
+        for station in data['results']:
+            if station['company'] not in companies:
+                companies.append(station['company'])
+            end
+        end
+    %>
+
+    %for c in companies:
+        <div class="companies">
+            <div class="box"><a href="/company/{{c}}">{{c}}</a></div>
+        </div>
+    %end
+
+    <%
+    companyBensin = str()
+    companyBensinPrice = 1000.0
+    companyDiesel = str()
+    companyDieselPrice = 1000.0
+
+    for i in data['results']:
+        if companyBensinPrice > float(i['bensin95']):
+            companyBensinPrice = i['bensin95']
+            companyBensin = i['company']
+        if companyDieselPrice > float(i['diesel']):
+            companyDieselPrice = i['diesel']
+            companyDiesel = i['company']
+        end
+        end
+    end
+    %>
+    <h4>Ódýrasta bensín: {{companyBensinPrice}} hjá {{companyBensin}}</h4>
+    <h4>Ódýrasta díesel: {{companyDieselPrice}} hjá {{companyDiesel}}</h4>
+
+    <h5>
+        Síðast uppfært:
+        <b>
+            <i>{{data['timestampPriceCheck']}}</i>
+        </b>
+    </h5>
+</body>
+</html>
